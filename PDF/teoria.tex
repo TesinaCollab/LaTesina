@@ -1,0 +1,8 @@
+\section{}
+Per controllare un display con una vga serve sapere delle cose
+
+\subsection{title}
+Prima di tutto bisogna conoscere la risoluzione dello schermo e il framerate cdesiderato. E il tempo di retrace (ovvero il tempo in cui lo schermo rimane nero)
+
+ogni volta che mando le informazioni al display devo fargli sapere che sto per inviare i dati alzando il segnalr \textit{HSync}, aspettare un tempo definito (\textit{back porch})e poi mandare l'enable al simsetma di gestione dei pixel per \textit{display time} dopo di che aspettare per un \textit{back porch} e abbassare \textit{HSync} per un tempo \textit{Sync}
+stessa cosa per il verticale, solo che devo invece di aspettare gli impulsi di clockdevo aspettare il tempo di una line
