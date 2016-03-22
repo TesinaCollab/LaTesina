@@ -35,11 +35,14 @@ Ora cercher\`o di descrivere come funziona un frame, poi Alex legger\`a e correg
 \draw (\fp+\s+\bp,-1.5) --+ (\d,0) node [sloped,midway,above] {\tiny display} node [sloped,midway,below]{\tiny time};
 \draw (\fp+\s+\bp+\d,-1.3) --+ (\fp,0) node [sloped,midway,above] {\tiny front} node [sloped,midway,below]{\tiny porch};
 \end{scope}
-\draw (0,0)-|++(\fp+\s,0)-|++(\bp,+\h)-|++(\d,-\h)-|++(\fp+\s+\bp,0);
-\draw (0,-1+\h)-|++(\fp,-\h)-|++(\s,+\h)-|++(\bp+\d+\fp,-\h)-|++(\s,+\h)-|++(\bp,0);
+\draw (0,0)-|++(\fp+\s,0)-|++(\bp,+\h)-|++(\d,-\h)-|++(\fp+\s+\bp,0) node[above]{D\_enable};
+\draw (0,-1+\h)-|++(\fp,-\h)-|++(\s,+\h)-|++(\bp+\d+\fp,-\h)-|++(\s,+\h)-|++(\bp,0)node[below]{SYNC};;
 \end{tikzpicture}
 \caption{I segnali sincronismo e display}
 \end{figure}
 
-ogni volta che mando le informazioni al display devo fargli sapere che sto per inviare i dati alzando il segnalr \textit{HSync}, aspettare un tempo definito (\textit{back porch})e poi mandare l'enable al simsetma di gestione dei pixel per \textit{display time} dopo di che aspettare per un \textit{back porch} e abbassare \textit{HSync} per un tempo \textit{Sync}
-stessa cosa per il verticale, solo che devo invece di aspettare gli impulsi di clockdevo aspettare il tempo di una line
+Per gestire le tempistiche del display devo rispettare delle precise indicazioni:
+
+Ho un segnale principale che si chiama \textit{HSYNC} che indica allo schermo quando cambiare riga, \`e normalmente alto. Dopo il segnale di \textit{HSYNC} devo aspettare un tempo chiamato \textbf{back porch} dopo il quale c'\`e il \textit{display time} che in impulsi di clock,coincide con il numero di pixel sulla linea, durante il quale mi occupo di inviare allo schermo le informazioni sul colore del singolo pixel, quindi c'\`e un ulteriore tempo morto, detto \textbf{front porch} in cui abbasso l'enable del display e aspetto il seguente segnale di sincronia.
+
+Per il segnale di sincronia verticale il discorso \`e lo stesso, con la differenza che le durate dei vari segmenti sono ``linee orizzontali'' invece che impulsi di clock.
