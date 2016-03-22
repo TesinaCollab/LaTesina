@@ -36,17 +36,18 @@ parameter V_disp 	= 1024	;
 // REGISTRI
 //==========================
 
-reg 
+//reg 
 
 //==========================
 // ISTRUZIONI
 //==========================
 
+/*
 always@(posedge clk or negedge rst_n)
 begin
 
 end	//always 
-
+*/
 
 endmodule	//timing 
 
