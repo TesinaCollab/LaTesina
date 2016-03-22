@@ -46,3 +46,26 @@ Per gestire le tempistiche del display devo rispettare delle precise indicazioni
 Ho un segnale principale che si chiama \textit{HSYNC} che indica allo schermo quando cambiare riga, \`e normalmente alto. Dopo il segnale di \textit{HSYNC} devo aspettare un tempo chiamato \textbf{back porch} dopo il quale c'\`e il \textit{display time} che in impulsi di clock,coincide con il numero di pixel sulla linea, durante il quale mi occupo di inviare allo schermo le informazioni sul colore del singolo pixel, quindi c'\`e un ulteriore tempo morto, detto \textbf{front porch} in cui abbasso l'enable del display e aspetto il seguente segnale di sincronia.
 
 Per il segnale di sincronia verticale il discorso \`e lo stesso, con la differenza che le durate dei vari segmenti sono ``linee orizzontali'' invece che impulsi di clock.
+
+Per controllare i quattro segnali, dato che hanno la stessa struttura due a due abbiamo deciso di realizzare due macchine a stati sincrone uguali, con dei parametri variabili:
+
+\begin{figure}[hbt]
+	\centering
+\begin{tikzpicture}[state/.style=state with output]
+\node[state, initial]		(sync)				{sync		\nodepart{lower} $00$};
+\node[state]	(fp)	[below right=of sync]	{front		\nodepart{lower} $10$};
+\node[state]	(bp)	[above right=of sync]	{back		\nodepart{lower} $10$};
+\node[state]	(display)[below right=of bp]	{display	\nodepart{lower} $11$};
+\path[->]	(sync)	edge				node{}		(bp)
+					edge[loop above]	node{}		()
+			(bp)	edge				node{}		(display)
+					edge[loop above]	node{}		()
+		(display)	edge				node{}		(fp)
+					edge[loop right]	node{}		()
+			(fp)	edge				node{}		(sync)
+					edge[loop below]	node{}		();
+\end{tikzpicture}
+\caption{Il funzionamento della macchina a stati spiegheremo in seguito le frecce, quando Alex far\`a la revisione}
+\end{figure}
+\lstinputlisting[language=verilog, lastline = 18,frame = single]{../VGA_controlli/stm_timing.v}
+%\lstinputlisting[language=make, firstline = 17, lastline = 40,frame = single]{../Makefile}
