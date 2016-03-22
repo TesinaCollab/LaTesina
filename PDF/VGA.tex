@@ -1,8 +1,9 @@
 \documentclass[10pt,twoside,a4paper]{article}
-\usepackage[cm]{fullpage}
+%\usepackage[cm]{fullpage}
 
-%\usepackage{geometry}
-%\geometry{a4paper,top=3cm,bottom=3cm,left=3.5cm,right=3.5cm,heightrounded,bindingoffset=5mm}
+\usepackage{geometry}
+\geometry{a4paper,top=3cm,bottom=3cm,left=3.5cm,right=3.5cm,heightrounded,bindingoffset=5mm}
+\usepackage{titling}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -11,12 +12,12 @@
 %\usepackage{showlabels} % debug, togliere
 
 \usepackage[italian]{babel}
-\usepackage[latin1]{inputenc}
-%\usepackage[utf8x]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8x]{inputenc}
 \usepackage{dsfont}
 %\usepackage{amsthm}
 %\usepackage{enumerate}
-%\usepackage{graphicx}
+\usepackage{graphicx}
 %\usepackage{caption}
 %\usepackage{subcaption}
 %\usepackage{extarrows}
@@ -70,15 +71,42 @@ linkcolor=black}
 %\numberwithin{equation}{subsection}
 
 %opening
-\title{}
-\author{Alex Amato & Daniele Rapetti}
-\date{}
+\pretitle{%
+\begin{center}
+	\LARGE
+	LOGO\\[\bigskipamount]
+	\Large{\textbf{Universit\`a degli Studi di Genova}}\\
+	%\includegraphics[width=0.15\textwidth]{logo}\\[\bigskipamount]
+	\rule{12cm}{0.5pt}\\
+	\large
+	FACOLT\`A DI SCIENZE MATEMATICHE, FISICHE E NATURALI\\
+	\textsc{Corso di Laurea Magistrale in Fisica\\}
+\end{center}
+\begin{center}\LARGE
+}
+\title{Controllo di uno schermo tramite porta VGA attraverso un FPGA}
+\posttitle{%
+	\par\end{center}
+\begin{center}\large Tesina per Elettronica Applicata\\
+\vskip0.5em
+\end{center}
+}
 
-%\makeindex
-
+\author{Alex Amato \and Daniele Rapetti}
+\postauthor{\end{tabular}\par\end{center}
+\vspace{3cm}
+\begin{abstract}
+	Abstract
+\end{abstract}
+}
+\predate{\begin{center}\large\vfill}
+\date{Anno 2014-2015}
+\postdate{\par\clearpage\end{center}}
+\makeindex
 \begin{document}
-%	\maketitle|
-%	\tableofcontents
+
+\maketitle
+\tableofcontents
 \include{teoria}
 
 
