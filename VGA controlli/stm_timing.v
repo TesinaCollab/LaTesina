@@ -1,7 +1,7 @@
 module stm_timing(
 
 input clk		,
-input rst_n		,
+input rst_n		
 
 );
 
@@ -54,43 +54,46 @@ else
 	begin
 	
 	casex({verifica,states})
-	xx1x_00	:	
+	6'b_xx1x_00	:	
 		begin
 		count_sync	<=	count_sync	+	1	;
 		end // xx1x_00
-	xx0x_00	:
+	6'b_xx0x_00	:
 		begin
-		states	<=	2b'01	;
+		states	<=	2'b01	;
 		count_sync	<=	0	;
 		end // xx0x_00
-	1xxx_01	:
+		
+	6'b_xxx1_01	:
 		begin
 		count_back	<=	count_back	+	1	;
 		end // 1xxx_01
-	0xxx_01	:
+	6'b_xxx0_01	:
 		begin
-		states	<=	2b'11	;
+		states	<=	2'b11	;
 		count_back	<=	0	;
 		end // 0xxx_01
-	xxx1_11	:
+		
+	6'b_1xxx_11	:
 		begin
 		count_disp	<=	count_disp	+	1	;
 		end // xxx1_11
-	xxx0_11	:
+	6'b_0xxx_11	:
 		begin
-		states	<=	2b'10	;
+		states	<=	2'b10	;
 		count_disp	<=	0	;
 		end // xxx0_11
-	x1xx_10	:
+		
+	6'b_x1xx_10	:
 		begin
 		count_front	<=	count_front	+	1	;
 		end // x1xx_10
-	x0xx_10	:
+	6'b_x0xx_10	:
 		begin
-		states	<=	2b'10	;
+		states	<=	2'b00	;
 		count_front	<=	0	;
 		end // x0xx_10
-		
+	endcase
 	end
 end //always
 

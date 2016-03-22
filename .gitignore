@@ -3,6 +3,13 @@
 *.rpt
 *.summary
 \db
+\incremental_db
+*.ini
+\simulation
+*.done
+*.wlf
+\work
+
 
 ##Tex
 
