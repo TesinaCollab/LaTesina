@@ -1,8 +1,11 @@
 module stm_timing(
 
 input clk		,
-input rst_n		
+input rst_n		,
 
+output	o_sync	,
+output	o_disp
+	
 );
 
 //==========================
@@ -32,10 +35,13 @@ wire [3:0] verifica	;
 // INT STRUCT
 //==========================
 
-assign	verifica[3] = count_disp 	< 	Disp	;
-assign	verifica[2] = count_front 	< 	Front ;
-assign	verifica[1] = count_sync 	< 	Sync	;
-assign	verifica[0] = count_back 	<	Back 	;
+assign	verifica[3] = count_disp 	< 	(Disp - 1)	;
+assign	verifica[2] = count_front 	< 	(Front - 1) ;
+assign	verifica[1] = count_sync 	< 	(Sync - 1)	;
+assign	verifica[0] = count_back 	<	(Back - 1) 	;
+
+assign	o_sync =  	states[0] || states[1]	;
+assign	o_disp =  	states[0] && states[1]	;
 
 always@(posedge clk or negedge rst_n)
 begin
