@@ -3,23 +3,16 @@ module test( );
 reg rst;
 wire clk;
 
-stm_timing #(
-
-.Disp	(15)	,
-.Front(1)	,
-.Sync (3)	,
-.Back	(10)	
-
-) h(clk,rst);
-
-stm_timing #(
-
-.Disp	(15)	,
-.Front(1)	,
-.Sync (3)	,
-.Back	(10)	
-
-) V(clk,rst);
+timing #(
+.H_disp	(20),
+.H_front(1),
+.H_sync (3),
+.H_back	(10),
+.V_disp	(15),
+.V_front(1),
+.V_sync (3),
+.V_back	(10)	
+) testingtime(clk, rst, hsync, vsync, blank_n, sync_n, disp_enable, Xpix, Ypix);
 
 myclock clock(clk);
 
