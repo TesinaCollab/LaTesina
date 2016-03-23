@@ -10,9 +10,18 @@ stm_timing #(
 .Sync (3)	,
 .Back	(10)	
 
-) a(clk,rst);
+) h(clk,rst);
 
-myclock ciccio(clk);
+stm_timing #(
+
+.Disp	(15)	,
+.Front(1)	,
+.Sync (3)	,
+.Back	(10)	
+
+) V(clk,rst);
+
+myclock clock(clk);
 
 initial
 begin
