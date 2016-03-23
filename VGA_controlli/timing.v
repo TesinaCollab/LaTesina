@@ -33,11 +33,33 @@ parameter V_back 	= 38		;
 parameter V_disp 	= 1024	;
 
 //==========================
-// REGISTRI
+// Struttura
 //==========================
 
 //reg 
+stm_timing #(
+	.Disp	(H_disp),
+	.Front(H_front),
+	.Sync (H_sync),
+	.Back	(H_back)	
+) Htiming(
+	.clk(clk),
+	.rst_n(rst_n),
+	.o_sync(hsync),
+	.o_disp(disp_enable)
+);//sincronia orizzontale
 
+stm_timing #(
+.Disp	(V_disp),
+.Front(V_front),
+.Sync (V_sync),
+.Back	(V_back)	
+) VTiming(
+	.clk(!hsync),//il timing verticale e` dato dalle linee orizzontali!
+	.rst_n(rst_n),
+	.o_sync(vsync),
+	.o_disp()
+);//sincronia verticale
 //==========================
 // ISTRUZIONI
 //==========================
