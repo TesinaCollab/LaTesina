@@ -1,27 +1,24 @@
 module timing(
-
 input clk		,
 input rst_n		,
-
+//direttamente alla porta
 output hsync	,
 output vsync	,
+//al ADV7123
 output blank_n	,
 output sync_n	,
-
+//al mux per i pixels
 output disp_enable
-
 );
 
 //==========================
 // PARAMETRI ORIZZONTALI
 //==========================
 
-
 parameter H_disp 	= 1280	;
 parameter H_front = 48		;
 parameter H_sync 	= 112		;
 parameter H_back 	= 248		;
-
 
 //==========================
 // PARAMETRI VERTICALI
@@ -36,7 +33,8 @@ parameter V_disp 	= 1024	;
 // Struttura
 //==========================
 
-//reg 
+wire vEnable, hEnable;
+
 stm_timing #(
 	.Disp	(H_disp),
 	.Front(H_front),
@@ -46,7 +44,7 @@ stm_timing #(
 	.clk(clk),
 	.rst_n(rst_n),
 	.o_sync(hsync),
-	.o_disp(disp_enable)
+	.o_disp(hEnable)
 );//sincronia orizzontale
 
 stm_timing #(
@@ -58,11 +56,12 @@ stm_timing #(
 	.clk(!hsync),//il timing verticale e` dato dalle linee orizzontali!
 	.rst_n(rst_n),
 	.o_sync(vsync),
-	.o_disp()
+	.o_disp(vEnable)
 );//sincronia verticale
 //==========================
 // ISTRUZIONI
 //==========================
+assign disp_enable = vEnable && hEnable; // i pixel devono lavorare quando non siamo nel blank time
 
 /*
 always@(posedge clk or negedge rst_n)
