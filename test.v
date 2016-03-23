@@ -27,15 +27,21 @@ end
 
 endmodule // test
 
- module myclock(
+module myclock(
  output reg clk
  );
+ always begin
+
+		#10 clk=1;
+		#10 clk=0;
+ /* per linux
  integer i;
   initial begin
    for(i=0;i<100;i=i+1) begin
 		#1 clk=1;
 		#1 clk=0;
 	end
+	*/
 end
 
 endmodule // myclk
