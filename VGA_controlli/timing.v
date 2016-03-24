@@ -79,7 +79,7 @@ end	//always clk rst_n
 
 always@(posedge hEnable or negedge vEnable or negedge rst_n)//controllo per verticale
 begin
-	if(!rst_n || !hEnable)begin//reset al reset o fine scan verticale
+	if(!rst_n || !vEnable)begin//reset al reset o fine scan verticale
 		Ypix <= 32'd0;
 	end
 	else if(disp_enable)begin
