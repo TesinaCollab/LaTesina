@@ -39,8 +39,8 @@ module myclock(
  );
  always begin
 
-		#10 clk=1;
-		#10 clk=0;
+		#4629 clk=1;//9.259ns/2
+		#4629 clk=0;//108Mhz!
  /* per linux
  integer i;
   initial begin
