@@ -3,7 +3,8 @@ module test( );
 reg rst;
 wire clk;
 wire hsync, vsync, blank_n, sync_n, disp_enable;
-wire [31:0]Xpix, [31:0]Ypix;
+wire [31:0]Xpix, Ypix;
+wire R,G,B;
 
 timing #(
 .H_disp	(1280),
@@ -15,6 +16,8 @@ timing #(
 .V_sync (3),
 .V_back	(38)	
 ) testingtime(clk, rst, hsync, vsync, blank_n, sync_n, disp_enable, Xpix, Ypix);
+
+testscreen screen(Xpix, Ypix, disp_enable, rst, clk, R,G,B);
 
 myclock clock(clk);
 
@@ -39,13 +42,32 @@ module testscreen(//temporaneo per usare VGASIM
 	output reg g,
 	output reg b
 );
+parameter H = 1280;
+parameter V = 1024;
 always@(posedge clk or negedge rst_n)begin
 	if(!rst_n)begin
 		r <= 0;
 		b <= 0;
 		g <= 0;
+	end else if(enable) begin
+		if (X<H/2&&Y<V/2)begin
+			r <= 1;
+			b <= 0;
+			g <= 0;
+		end else if (Y<V/2)begin
+			r <= 1;
+			b <= 1;
+			g <= 1;
+		end else if (X<H/2)begin
+			r <= 1;
+			b <= 1;
+			g <= 0;
+		end begin
+			r <= 1;
+			b <= 0;
+			g <= 1;
+		end		
 	end
-	
 end
 endmodule
 
