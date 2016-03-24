@@ -2,16 +2,18 @@ module test( );
 
 reg rst;
 wire clk;
+wire hsync, vsync, blank_n, sync_n, disp_enable;
+wire [31:0]Xpix, [31:0]Ypix;
 
 timing #(
-.H_disp	(20),
-.H_front(1),
-.H_sync (3),
-.H_back	(10),
-.V_disp	(15),
+.H_disp	(1280),
+.H_front(48),
+.H_sync (112),
+.H_back	(248),
+.V_disp	(1024),
 .V_front(1),
 .V_sync (3),
-.V_back	(10)	
+.V_back	(38)	
 ) testingtime(clk, rst, hsync, vsync, blank_n, sync_n, disp_enable, Xpix, Ypix);
 
 myclock clock(clk);
@@ -27,13 +29,33 @@ end
 
 endmodule // test
 
+module testscreen(//temporaneo per usare VGASIM
+	input [31:0] X,
+	input [31:0] Y,
+	input enable,
+	input rst_n,
+	input clk,
+	output reg r,
+	output reg g,
+	output reg b
+);
+always@(posedge clk or negedge rst_n)begin
+	if(!rst_n)begin
+		r <= 0;
+		b <= 0;
+		g <= 0;
+	end
+	
+end
+endmodule
+
 module myclock(
  output reg clk
  );
  always begin
 
-		#10 clk=1;
-		#10 clk=0;
+		#4629 clk=1;//9.259ns/2
+		#4629 clk=0;//108Mhz!
  /* per linux
  integer i;
   initial begin
