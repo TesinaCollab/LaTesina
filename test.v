@@ -105,7 +105,7 @@ module myclock(
  );
  always begin
 		#20000 clk=1;//39.721ns/2
-		#20000 clk=0;//108Mhz!
+		#20000 clk=0;//25.175Mhz! per 640x480 @ 60Hz
 		//#4629 clk=1;//9.259ns/2
 		//#4629 clk=0;//108Mhz!
  /* per linux
