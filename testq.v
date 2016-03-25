@@ -5,6 +5,9 @@ wire clk;
 wire hsync, vsync, blank_n, sync_n, disp_enable;
 wire [31:0]Xpix, Ypix;
 wire R,G,B;
+wire Red,Green,Blue;
+
+assign {R,G,B} = {Red&&disp_enable,Green&&disp_enable,Blue&&disp_enable};
 
 timing #(
 .H_disp	(640),
@@ -17,7 +20,7 @@ timing #(
 .V_back	(33)	
 ) testingtime(clk, rst, hsync, vsync, blank_n, sync_n, disp_enable, Xpix, Ypix);
 
-cornice #(.H(640),.V(480)) screen(Xpix, Ypix, disp_enable, rst, clk, R,G,B);
+cornice #(.H(640),.V(480)) screen(Xpix, Ypix, disp_enable, rst, clk, Red,Green,Blue);
 
 myclock clock(clk);
 
@@ -55,15 +58,15 @@ always@(posedge clk or negedge rst_n)begin
 			b <= 1;
 			g <= 1;
 		end
-		else if (X > H-21)begin
-			r <= 1;
-			b <= 1;
-			g <= 0;
-		end
 		else if (Y < 21)begin
 			r <= 0;
 			b <= 1;
 			g <= 1;
+		end
+		else if (X > H-21)begin
+			r <= 1;
+			b <= 1;
+			g <= 0;
 		end
 		else if (Y > V-21)begin
 			r <= 1;
