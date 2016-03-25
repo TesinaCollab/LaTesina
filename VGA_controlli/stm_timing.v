@@ -42,7 +42,7 @@ assign	verifica[0] = count_back 	<	(Back - 1) 	;
 
 assign	o_sync =  	!(states[0] && states[1])	;
 assign	o_disp =  	!states[0] && !states[1]	;
-
+//funge anche con display visualizzato per primo
 always@(posedge clk or negedge rst_n)
 begin
 if (!rst_n)
