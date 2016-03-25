@@ -40,8 +40,8 @@ assign	verifica[2] = count_front 	< 	(Front - 1) ;
 assign	verifica[1] = count_sync 	< 	(Sync - 1)	;
 assign	verifica[0] = count_back 	<	(Back - 1) 	;
 
-assign	o_sync =  	states[0] || states[1]	;
-assign	o_disp =  	states[0] && states[1]	;
+assign	o_sync =  	!(states[0] && states[1])	;
+assign	o_disp =  	!states[0] && !states[1]	;
 
 always@(posedge clk or negedge rst_n)
 begin
@@ -60,11 +60,11 @@ else
 	begin
 	
 	casex({verifica,states})
-	6'b_xx1x_00	:	
+	6'b_xx1x_11	:	
 		begin
 		count_sync	<=	count_sync	+	1	;
 		end // xx1x_00
-	6'b_xx0x_00	:
+	6'b_xx0x_11	:
 		begin
 		states	<=	2'b01	;
 		count_sync	<=	0	;
@@ -76,15 +76,15 @@ else
 		end // 1xxx_01
 	6'b_xxx0_01	:
 		begin
-		states	<=	2'b11	;
+		states	<=	2'b00	;
 		count_back	<=	0	;
 		end // 0xxx_01
 		
-	6'b_1xxx_11	:
+	6'b_1xxx_00	:
 		begin
 		count_disp	<=	count_disp	+	1	;
 		end // xxx1_11
-	6'b_0xxx_11	:
+	6'b_0xxx_00	:
 		begin
 		states	<=	2'b10	;
 		count_disp	<=	0	;
