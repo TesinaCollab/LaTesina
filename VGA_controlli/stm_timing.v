@@ -96,7 +96,7 @@ else
 		end // x1xx_10
 	6'b_x0xx_10	:
 		begin
-		states	<=	2'b00	;
+		states	<=	2'b11	;
 		count_front	<=	0	;
 		end // x0xx_10
 	endcase
