@@ -67,25 +67,30 @@ assign disp_enable = vEnable && hEnable; // i pixel devono lavorare quando non s
 assign blank_n	= 1;//non uso l'opzione blank
 assign sync_n	= 0;//disattiva i segnali di sincronia sul verde
 
-always@(posedge clk or negedge hEnable or negedge rst_n)//controllo per orizzontale
-begin
-	if(!rst_n || !hEnable)begin//reset al reset o fine riga
-		Xpix <= 32'd0;
+always@(posedge clk or negedge rst_n)begin//avanza di una
+	if(!rst_n) begin//reset
+		Xpix <= 0;
 	end
-	else if(disp_enable)begin
-		Xpix <= Xpix+32'd1;
+	else if(disp_enable) begin //avanza il counter della riga se posso disegnare
+		Xpix <= Xpix+1;
 	end
-end	//always clk rst_n
+end
 
-always@(posedge hEnable or negedge vEnable or negedge rst_n)//controllo per verticale
-begin
-	if(!rst_n || !vEnable)begin//reset al reset o fine scan verticale
-		Ypix <= 32'd0;
+always@(posedge hEnable or negedge rst_n)begin//avanza di una
+	if(!rst_n) begin//reset
+		Ypix <= 0;
 	end
-	else if(disp_enable)begin
-		Ypix <= Ypix+32'd1;
+	else if(disp_enable) begin //avanza il counter della riga se posso disegnare
+		Ypix <= Ypix+1;
 	end
-end	//always clk rst_n
+end
 
+always@(negedge vEnable)begin
+	Ypix <= 0;
+end
+
+always@(negedge hEnable)begin
+	Xpix <= 0;
+end
 endmodule	//timing 
 
