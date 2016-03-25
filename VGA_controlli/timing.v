@@ -76,7 +76,7 @@ always@(posedge clk or negedge rst_n)begin//avanza di una
 	end
 end
 
-always@(negedge hsync or negedge rst_n)begin//avanza di una
+always@(posedge hEnable or negedge rst_n)begin//avanza di una
 	if(!rst_n) begin//reset
 		Ypix <= 0;
 	end
