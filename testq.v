@@ -50,14 +50,24 @@ always@(posedge clk or negedge rst_n)begin
 		b <= 0;
 		g <= 0;
 	end else if(enable) begin
-		if (X < 21 || X > H-21)begin
+		if (X < 21)begin
 			r <= 1;
 			b <= 1;
 			g <= 1;
 		end
-		else if (Y < 21 || Y > V-21)begin
+		else if (X > H-21)begin
 			r <= 1;
 			b <= 1;
+			g <= 0;
+		end
+		else if (Y < 21)begin
+			r <= 0;
+			b <= 1;
+			g <= 1;
+		end
+		else if (Y > V-21)begin
+			r <= 1;
+			b <= 0;
 			g <= 1;
 		end
 		else begin
