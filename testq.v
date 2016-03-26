@@ -15,9 +15,9 @@ timing #(
 .H_sync (96),
 .H_back	(48),
 .V_disp	(480),
-.V_front(10),
+.V_front(11),
 .V_sync (2),
-.V_back	(33)	
+.V_back	(31)	
 ) testingtime(clk, rst, hsync, vsync, blank_n, sync_n, disp_enable, Xpix, Ypix);
 
 cornice #(.H(640),.V(480)) screen(Xpix, Ypix, disp_enable, rst, clk, Red,Green,Blue);
