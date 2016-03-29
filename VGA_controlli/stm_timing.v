@@ -3,7 +3,7 @@ module stm_timing(
 		  input  rst_n,
 
 		  output o_sync,
-		  output o_disp      
+		  output reg o_disp      
 		  );
    //==========================
    // PARAMETRI
