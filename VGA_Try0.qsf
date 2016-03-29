@@ -107,3 +107,6 @@ set_global_assignment -name VERILOG_FILE VGA_controlli/stm_timing.v
 set_global_assignment -name SDC_FILE VGA_Try0.SDC
 set_global_assignment -name VERILOG_FILE states.v
 set_global_assignment -name VERILOG_FILE test.v
+set_global_assignment -name VERILOG_FILE Life/vicini.v
+set_global_assignment -name VERILOG_FILE Life/cella.v
+set_global_assignment -name VERILOG_FILE Life/lifetestt.v
