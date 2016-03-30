@@ -50,8 +50,8 @@ module VGA_Try0(
 //=======================================================
 
 wire disp_en;
-wire X;
-wire Y;
+wire [31:0] X;
+wire [31:0] Y;
 wire reset;
 
 reg [7:0] r,g,b;
@@ -82,13 +82,13 @@ timing tm(
 //=======================================================
 assign reset = KEY[0];
 //assign VGA_CLK = CLOCK4_50;
-assign VGA_BLANK_N = KEY[1];
+assign VGA_BLANK_N = SW[0];
+assign LEDR[1] = VGA_BLANK_N ;
+assign VGA_R = (disp_en)?r:empty;
+assign VGA_G = (disp_en)?g:empty;
+assign VGA_B = (disp_en)?b:empty;
 
-assign VGA_R = r && disp_en;
-assign VGA_G = g && disp_en;
-assign VGA_B = b && disp_en;
-
-assign GPIO1GPIO[4:0]={CLOCK_50,CLOCK2_50,CLOCK3_50,CLOCK4_50,VGA_CLK};
+assign GPIO1GPIO[1:0]={disp_en,VGA_CLK};
 
 PLL_0002 pll(	
 
@@ -106,11 +106,12 @@ PLL_0002 pll(
 
 initial
 begin
-r <= empty;
+r <= 8'b_1111_1111;
 b <= empty;
 g <= empty;
 end
 
+/*
 always@(posedge VGA_CLK)
 begin
  if(disp_en) begin
@@ -141,6 +142,6 @@ begin
 		end
 	end
 end
-
+*/
 
 endmodule
