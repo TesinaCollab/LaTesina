@@ -11,6 +11,23 @@ module VGA_Try0(
 	input 		          		CLOCK3_50,
 	input 		          		CLOCK4_50,
 
+	//////////// SEG7 //////////
+	output		     [6:0]		HEX0,
+	output		     [6:0]		HEX1,
+	output		     [6:0]		HEX2,
+	output		     [6:0]		HEX3,
+	output		     [6:0]		HEX4,
+	output		     [6:0]		HEX5,
+
+	//////////// KEY //////////
+	input 		     [3:0]		KEY,
+
+	//////////// LED //////////
+	output		     [9:0]		LEDR,
+
+	//////////// SW //////////
+	input 		     [9:0]		SW,
+
 	//////////// VGA //////////
 	output		     [7:0]		VGA_B,
 	output		          		VGA_BLANK_N,
@@ -19,8 +36,11 @@ module VGA_Try0(
 	output		          		VGA_HS,
 	output		     [7:0]		VGA_R,
 	output		          		VGA_SYNC_N,
-	output		          		VGA_VS
-);
+	output		          		VGA_VS,
+
+	//////////// GPIO_1, GPIO_1 connect to GPIO Default //////////
+	inout 		    [35:0]		GPIO1GPIO
+	);
 
 
 
