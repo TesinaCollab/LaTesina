@@ -51,7 +51,7 @@ module VGA_Try0(
 wire disp_en;
 wire X;
 wire Y;
-reg reset;
+wire reset;
 
 reg [7:0] r,g,b;
 
@@ -61,7 +61,7 @@ parameter full = 8'hff;
 parameter empty = 8'b0;
 
 timing tm(
-.clk (VGA_CLK)		,
+.clk (CLOCK4_50)		,
 .rst_n	(reset)	,
 //direttamente alla porta
 .hsync	(VGA_HS),
@@ -79,22 +79,20 @@ timing tm(
 //=======================================================
 //  Structural coding
 //=======================================================
+assign reset = KEY[0];
+assign VGA_CLK = CLOCK4_50;
+
 assign VGA_R = r && disp_en;
 assign VGA_G = g && disp_en;
 assign VGA_B = b && disp_en;
+
+assign GPIO1GPIO[:]={CLOCK_50,CLOCK4_50,}
 
 initial
 begin
 r <= empty;
 b <= empty;
 g <= empty;
-reset = 0;
-end
-
-always@(posedge CLOCK_50)
-begin
-if(!reset)
-reset=1;
 end
 
 always@(posedge VGA_CLK)
