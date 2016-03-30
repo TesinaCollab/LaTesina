@@ -106,12 +106,12 @@ PLL_0002 pll(
 
 initial
 begin
-r <= 8'b_1111_1111;
+r <= empty;
 b <= empty;
 g <= empty;
 end
 
-/*
+
 always@(posedge VGA_CLK)
 begin
  if(disp_en) begin
@@ -141,7 +141,22 @@ begin
 			g <= empty;
 		end
 	end
+	else begin
+r <= empty;
+b <= empty;
+g <= empty;
+end
+end
+/*
+always@(posedge VGA_CLK)
+begin
+ if(disp_en) 
+ begin
+	if (X < H)
+	r <= full;
+else
+r <= empty;
+end
 end
 */
-
 endmodule
