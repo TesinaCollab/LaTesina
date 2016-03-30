@@ -63,7 +63,7 @@ stm_timing #(
 //==========================
 // ISTRUZIONI
 //==========================
-assign disp_enable = vEnable && hEnable; // i pixel devono lavorare quando non siamo nel blank time
+assign disp_enable = vEnable & hEnable; // i pixel devono lavorare quando non siamo nel blank time
 assign blank_n	= disp_enable;//blank negato
 assign sync_n	= 1'b0;//disattiva i segnali di sincronia sul verde
 

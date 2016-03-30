@@ -101,7 +101,7 @@ PLL_0002 pll(
 .outclk_0 (VGA_CLK),
 
 	// interface 'locked'
-.locked (LEDR[0])
+.locked (LEDR[9])
 	);
 
 initial
@@ -110,7 +110,6 @@ r <= empty;
 b <= empty;
 g <= empty;
 end
-
 
 always@(posedge VGA_CLK)
 begin
@@ -137,7 +136,7 @@ begin
 		end
 		else begin
 			r <= empty;
-			b <= full;
+			b <= full-Y;
 			g <= empty;
 		end
 	end
