@@ -37,6 +37,7 @@ module VGA_Try0(
 	output		     [7:0]		VGA_R,
 	output		          		VGA_SYNC_N,
 	output		          		VGA_VS,
+	
 
 	//////////// GPIO_1, GPIO_1 connect to GPIO Default //////////
 	inout 		    [35:0]		GPIO1GPIO
@@ -61,13 +62,13 @@ parameter full = 8'hff;
 parameter empty = 8'b0;
 
 timing tm(
-.clk (CLOCK4_50)		,
+.clk (VGA_CLK)		,
 .rst_n	(reset)	,
 //direttamente alla porta
 .hsync	(VGA_HS),
 .vsync	(VGA_VS),
 //al ADV7123
-.blank_n	(VGA_BLANK_N),
+//.blank_n	(VGA_BLANK_N),
 .sync_n	(VGA_SYNC_N),
 //al mux per i pixels
 .disp_enable  (disp_en),
@@ -80,13 +81,28 @@ timing tm(
 //  Structural coding
 //=======================================================
 assign reset = KEY[0];
-assign VGA_CLK = CLOCK4_50;
+//assign VGA_CLK = CLOCK4_50;
+assign VGA_BLANK_N = KEY[1];
 
 assign VGA_R = r && disp_en;
 assign VGA_G = g && disp_en;
 assign VGA_B = b && disp_en;
 
-assign GPIO1GPIO[:]={CLOCK_50,CLOCK4_50,}
+assign GPIO1GPIO[4:0]={CLOCK_50,CLOCK2_50,CLOCK3_50,CLOCK4_50,VGA_CLK};
+
+PLL_0002 pll(	
+
+.refclk (CLOCK_50),
+
+	// interface 'reset'
+.rst (~reset),
+
+	// interface 'outclk0'
+.outclk_0 (VGA_CLK),
+
+	// interface 'locked'
+.locked (LEDR[0])
+	);
 
 initial
 begin
