@@ -25,16 +25,88 @@ module VGA_Try0(
 
 
 //=======================================================
-//  REG/WIRE declarations
+//  REG/wIRE declarations
 //=======================================================
 
+wire disp_en;
+wire X;
+wire Y;
+reg reset;
 
+reg [7:0] r,g,b;
+
+parameter H = 1280;
+parameter V = 1024;
+parameter full = 8'hff;
+parameter empty = 8'b0;
+
+timing tm(
+.clk (VGA_CLK)		,
+.rst_n	(reset)	,
+//direttamente alla porta
+.hsync	(VGA_HS),
+.vsync	(VGA_VS),
+//al ADV7123
+.blank_n	(VGA_BLANK_N),
+.sync_n	(VGA_SYNC_N),
+//al mux per i pixels
+.disp_enable  (disp_en),
+.Xpix (X),
+.Ypix (Y)
+);
 
 
 //=======================================================
 //  Structural coding
 //=======================================================
+assign VGA_R = r && disp_en;
+assign VGA_G = g && disp_en;
+assign VGA_B = b && disp_en;
 
+initial
+begin
+r <= empty;
+b <= empty;
+g <= empty;
+reset = 0;
+end
+
+always@(posedge CLOCK_50)
+begin
+if(!reset)
+reset=1;
+end
+
+always@(posedge VGA_CLK)
+begin
+ if(disp_en) begin
+		if (X < 21)begin
+			r <= full;
+			b <= full;
+			g <= full;
+		end
+		else if (Y < 21)begin
+			r <= empty;
+			b <= full;
+			g <= full;
+		end
+		else if (X > H-21)begin
+			r <= full;
+			b <= full;
+			g <= empty;
+		end
+		else if (Y > V-21)begin
+			r <= full;
+			b <= empty;
+			g <= full;
+		end
+		else begin
+			r <= empty;
+			b <= full;
+			g <= empty;
+		end
+	end
+end
 
 
 endmodule
