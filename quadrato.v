@@ -17,7 +17,10 @@ parameter larg2 = larghezza/2;
 wire xUnder, yUnder;
 assign xUnder = (X_POS < larg2)&&(X_POS>X_CONTROLLO);
 assign yUnder = Y_POS < alt2;
-assign CONFERMA = ((X_CONTROLLO +((xUnder)?H:0)> (X_POS +((xUnder)?H:0)-larg2)) && (Y_CONTROLLO > (Y_POS-alt2)))&&((X_CONTROLLO +((xUnder)?H:0)< (X_POS + ((xUnder)?H:0)+ larg2)) && (Y_CONTROLLO < (Y_POS + alt2)));
+wire alto,basso;
+assign alto = ((X_CONTROLLO + larg2> X_POS) && (Y_CONTROLLO +alt2 > Y_POS));
+assign bsso = ((X_CONTROLLO +((xUnder)?H:0)< (X_POS + ((xUnder)?H:0)+ larg2)) && (Y_CONTROLLO < (Y_POS + alt2)));
+assign CONFERMA = alto && basso;
 		
 		
 endmodule //rettangolo
