@@ -29,25 +29,25 @@ module stm_timing(
      begin
 	if (!rst_n)
 	  begin
-	     count <= 0;	 
+	     count <= 11'd0;	 
 	     sync <= 0;
 	     o_disp <=0;
 	  end //if rst_n
 	else
 	  begin
 	     if(count < Total)
-	       count <= count +1'b1;
+	       count <= count + 11'd1;
 	     else
 	       begin
-		  count <= 0;
+		  count <= 11'd0;
 		  o_disp <= 0;
 	       end
-	     if(count == Front -1)//impulso sincronia dopo il front
+	     if(count == (Front - 1))//impulso sincronia dopo il front
 	       sync <= 1;
-	     if(count == Front + Sync-1)//fine impulso sincronia
+	     if(count == (Front + Sync - 1))//fine impulso sincronia
 	       sync <= 0;
-	     if(count == Back + Front + Sync-1)//dopo il back c'e` il display
-	       o_disp <=1;
+	     if(count == (Back + Front + Sync - 1))//dopo il back c'e` il display
+	       o_disp <= 1;
 	  end
      end //always
 endmodule //stm_timing

@@ -50,9 +50,12 @@ module VGA_Try0(
 //=======================================================
 
 wire disp_en;
-wire [31:0] X;
-wire [31:0] Y;
+wire [31:0] x;
+wire [31:0] y;
 wire reset;
+
+wire vEnable;
+wire hEnable;
 
 reg [7:0] r,g,b;
 
@@ -71,24 +74,92 @@ timing tm(
 //.blank_n	(VGA_BLANK_N),
 .sync_n	(VGA_SYNC_N),
 //al mux per i pixels
-.disp_enable  (disp_en),
-.Xpix (X),
-.Ypix (Y)
+//.disp_enable  (disp_en),
+.Xpix (x),
+.Ypix (y),
+.vEnable (vEnable),
+.hEnable (hEnable)
 );
 
+assign disp_en = vEnable && hEnable ;
+reg [7:0] colore;
+/*
+//Per il 7 segmenti
+wire [3:0] d2,d1,d0;
+wire [6:0] unused;
+wire [7:0] muxcolor;
+
+assign muxcolor = ((SW[1:0] == 2'b00)?colore:((SW[1:0] == 2'b01)?r:((SW[1:0] == 2'b10)?g:b)));
+
+BIN20to6BCD segmenti(
+.binary ({12'd0,muxcolor}),
+.D2 (d2),
+.D1 (d1),
+.D0 (d0)
+);
+
+bcdtoHex zero(
+.inBCD (4'd0),
+.outHEX (unused)
+);
+
+bcdtoHex cifra1(
+.inBCD (d1),
+.outHEX (HEX1)
+);
+
+bcdtoHex cifra2(
+.inBCD (d2),
+.outHEX (HEX2)
+);
+
+
+bcdtoHex cifra3(
+.inBCD (d0),
+.outHEX (HEX0)
+);
+
+assign HEX5 = unused;
+assign HEX4 = unused;
+assign HEX3 = unused;
+*/
+
+/*
+always@(posedge VGA_VS or negedge reset)
+begin
+if(!reset)
+begin
+r <= empty;
+g <= empty;
+b <= empty;
+end
+else
+begin
+	colore <= SW[9:2];
+	if(!KEY[3])
+		r <= colore ;
+	if(!KEY[2])
+		g <= colore ;
+	if(!KEY[1])
+		b <= colore ;
+end
+end
+*/
 
 //=======================================================
 //  Structural coding
 //=======================================================
 assign reset = KEY[0];
 //assign VGA_CLK = CLOCK4_50;
-assign VGA_BLANK_N = SW[0];
+assign VGA_BLANK_N = 1'b1;
+
 assign LEDR[1] = VGA_BLANK_N ;
 assign VGA_R = (disp_en)?r:empty;
 assign VGA_G = (disp_en)?g:empty;
 assign VGA_B = (disp_en)?b:empty;
 
-assign GPIO1GPIO[1:0]={disp_en,VGA_CLK};
+assign GPIO1GPIO[5:0]={VGA_CLK,disp_en,VGA_HS,VGA_VS,vEnable,hEnable};
+
 
 PLL_0002 pll(	
 
@@ -111,32 +182,35 @@ b <= empty;
 g <= empty;
 end
 
+
+/*
+//CORNICE
 always@(posedge VGA_CLK)
 begin
  if(disp_en) begin
-		if (X < 21)begin
+		if (x < 21)begin
 			r <= full;
 			b <= full;
 			g <= full;
 		end
-		else if (Y < 21)begin
+		else if (y < 21)begin
 			r <= empty;
 			b <= full;
 			g <= full;
 		end
-		else if (X > H-21)begin
+		else if (x > H-21)begin
 			r <= full;
 			b <= full;
 			g <= empty;
 		end
-		else if (Y > V-21)begin
+		else if (y > V-21)begin
 			r <= full;
 			b <= empty;
 			g <= full;
 		end
 		else begin
 			r <= empty;
-			b <= full-Y;
+			b <= (full - y[10:2]);
 			g <= empty;
 		end
 	end
@@ -146,16 +220,76 @@ b <= empty;
 g <= empty;
 end
 end
-/*
+*/
+
+/*/SCHERMO
 always@(posedge VGA_CLK)
 begin
  if(disp_en) 
  begin
-	if (X < H)
+	if (x < H)
 	r <= full;
 else
 r <= empty;
 end
 end
 */
+
+ //QUADRATI
+always@(posedge VGA_CLK or negedge reset)begin
+	if(!reset)begin
+		r <= empty;
+		b <= empty;
+		g <= empty;
+	end else if(disp_en) begin
+	/*
+			if (x<(H/2)&&y<(V/2))begin
+			r <= 1;
+			b <= 0;
+			g <= 0;
+		end
+		else if (x>(H/2)&&y<(V/2))begin
+			r <= 0;
+			b <= 1;
+			g <= 0;
+		end
+		else if (x<(H/2)&&y>(V/2))begin
+			r <= 0;
+			b <= 0;
+			g <= 1;
+		end
+		else if (x>(H/2)&&y>(V/2))begin
+			r <= 0;
+			b <= 0;
+			g <= 0;
+		end
+		*/
+		if (x < (H/2-4) && y < (V/2-4))begin
+			r <= full;
+			b <= empty;
+			g <= empty;
+		end
+		else if (x > (H/2+4) && y < (V/2-4))begin
+			r <= empty;
+			b <= full;
+			g <= empty;
+		end
+		else if (x<(H/2-4) && y>(V/2+4))begin
+			r <= empty;
+			b <= empty;
+			g <= full;
+		end
+		else if (x>(H/2+4) && y>(V/2+4))begin
+			r <= full;
+			b <= empty;
+			g <= full;
+		end
+		else begin
+			r <= full;
+			b <= full;
+			g <= full;
+		end
+	end
+end
+
 endmodule

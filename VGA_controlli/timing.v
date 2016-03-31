@@ -7,6 +7,8 @@ output vsync	,
 //al ADV7123
 output blank_n	,
 output sync_n	,
+output vEnable ,
+output hEnable ,
 //al mux per i pixels
 output disp_enable,
 output reg [31:0] Xpix,//parole enormi rispetto a quello che serve in realta`
@@ -35,7 +37,7 @@ parameter V_disp 	= 1024	;
 // Struttura
 //==========================
 
-wire vEnable, hEnable;
+//wire vEnable, hEnable;
 
 stm_timing #(
 	.Disp	(H_disp),
@@ -63,8 +65,8 @@ stm_timing #(
 //==========================
 // ISTRUZIONI
 //==========================
-assign disp_enable = vEnable & hEnable; // i pixel devono lavorare quando non siamo nel blank time
-assign blank_n	= disp_enable;//blank negato
+assign disp_enable = vEnable && hEnable; // i pixel devono lavorare quando non siamo nel blank time
+assign blank_n	= 1'b1;//disp_enable;//blank negato
 assign sync_n	= 1'b0;//disattiva i segnali di sincronia sul verde
 
 always@(posedge clk or negedge rst_n or negedge hEnable)begin//avanza di una
@@ -72,7 +74,7 @@ always@(posedge clk or negedge rst_n or negedge hEnable)begin//avanza di una
 		Xpix <= 0;
 	end
 	else if(disp_enable) begin //avanza il counter della riga se posso disegnare
-		Xpix <= Xpix+1;
+		Xpix <= Xpix + 1;
 	end
 end
 
@@ -81,7 +83,7 @@ always@(posedge hEnable or negedge rst_n or negedge vEnable)begin//avanza di una
 		Ypix <= 0;
 	end
 	else if(disp_enable) begin //avanza il counter della riga se posso disegnare
-		Ypix <= Ypix+1;
+		Ypix <= Ypix + 1;
 	end
 end
 endmodule	//timing 
