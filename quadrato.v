@@ -15,7 +15,7 @@ parameter H = 1280;
 parameter alt2 = altezza/2;
 parameter larg2 = larghezza/2;
 wire xUnder, yUnder;
-wire xDiff = larg2- X_POS;
+wire [10:0]xDiff = larg2- X_POS;
 assign xUnder = (X_POS < larg2);
 assign yUnder = Y_POS < alt2;
 wire orizz,vert;
