@@ -11,9 +11,13 @@ output CONFERMA
 
 parameter altezza = 100;
 parameter larghezza = 100;
+parameter H = 1280;
 parameter alt2 = altezza/2;
 parameter larg2 = larghezza/2;
-assign CONFERMA = ((X_CONTROLLO > (X_POS-larg2)) && (Y_CONTROLLO > (Y_POS-alt2)))&&((X_CONTROLLO < (X_POS + larg2)) && (Y_CONTROLLO < (Y_POS + alt2)));
+wire xUnder, yUnder;
+assign xUnder = X_POS<larg2;
+assign yUnder = Y_POS<alt2;
+assign CONFERMA = ((X_CONTROLLO > (X_POS-larg2+((xUnder)?H:0))) && (Y_CONTROLLO > (Y_POS-alt2)))&&((X_CONTROLLO < (X_POS + larg2)) && (Y_CONTROLLO < (Y_POS + alt2)));
 		
 		
 endmodule //rettangolo

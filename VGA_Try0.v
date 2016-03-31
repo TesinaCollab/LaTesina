@@ -229,8 +229,8 @@ parameter altezza = 300;
 parameter larghezza = 400;
 parameter spessore = 20;
 
-reg [10:0] posx = (H/2 - larghezza/2);
-reg [10:0] posy = (V/2 - altezza/2);
+reg [10:0] posx = (H/2);
+reg [10:0] posy = (V/2);
 
 
 wire [10:0] differenza = H - posx;
