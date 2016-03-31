@@ -15,12 +15,13 @@ parameter H = 1280;
 parameter alt2 = altezza/2;
 parameter larg2 = larghezza/2;
 wire xUnder, yUnder;
-assign xUnder = (X_POS < larg2)&&(X_POS>X_CONTROLLO);
+wire xDiff = larg2- X_POS;
+assign xUnder = (X_POS < larg2);
 assign yUnder = Y_POS < alt2;
-wire alto,basso;
-assign alto = ((X_CONTROLLO + larg2> X_POS) && (Y_CONTROLLO +alt2 > Y_POS));
-assign bsso = ((X_CONTROLLO +((xUnder)?H:0)< (X_POS + ((xUnder)?H:0)+ larg2)) && (Y_CONTROLLO < (Y_POS + alt2)));
-assign CONFERMA = alto && basso;
+wire orizz,vert;
+assign orizz = (xUnder)?((X_CONTROLLO > 0) && (X_CONTROLLO +< (X_POS + larg2))||(X_CONTROLLO > (H-diff))):((X_CONTROLLO > X_POS-larg2) && (X_CONTROLLO < (X_POS + larg2)));
+assign vert = ((Y_CONTROLLO + alt2 > Y_POS) && (Y_CONTROLLO < (Y_POS + alt2)));
+assign CONFERMA = orizz && vert;
 		
 		
 endmodule //rettangolo
