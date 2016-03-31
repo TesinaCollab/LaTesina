@@ -15,7 +15,7 @@ parameter H = 1280;
 
 wire [10:0] differenza = H - X_POS;
  
-assign CONFERMA = (differenza<larghezza)?((((X_CONTROLLO > X_POS) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < H) && (Y_CONTROLLO < (Y_POS + altezza))))||(((X_CONTROLLO > 0) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < differenza) && (Y_CONTROLLO < (Y_POS + altezza))))):((((X_CONTROLLO > X_POS) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < (X_POS + larghezza) && (Y_CONTROLLO < (Y_POS + altezza))))));
+assign CONFERMA = (differenza<larghezza)?((((X_CONTROLLO > X_POS) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < H) && (Y_CONTROLLO < (Y_POS + altezza))))||(((X_CONTROLLO > 0) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < (larghezza-differenza)) && (Y_CONTROLLO < (Y_POS + altezza))))):((((X_CONTROLLO > X_POS) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < (X_POS + larghezza) && (Y_CONTROLLO < (Y_POS + altezza))))));
 
 
 endmodule //rettangolo
