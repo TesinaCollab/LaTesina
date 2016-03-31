@@ -20,7 +20,7 @@ module VGA_Try0(
 	output		     [6:0]		HEX5,
 
 	//////////// KEY //////////
-	input 		     [3:0]		KEY,
+	input 		     [3:0]		KEY, 
 
 	//////////// LED //////////
 	output		     [9:0]		LEDR,
@@ -161,7 +161,7 @@ assign VGA_B = (disp_en)?b:empty;
 assign GPIO1GPIO[5:0]={VGA_CLK,disp_en,VGA_HS,VGA_VS,vEnable,hEnable};
 
 
-PLL_0002 pll(	
+PLL pll(	
 
 .refclk (CLOCK_50),
 
@@ -221,20 +221,131 @@ g <= empty;
 end
 end
 */
+//RETTANGOLO
+wire here,here1,here2;
+assign here = here1 || here2;
+wire in,in1,in2;
+assign in = in1 || in2;
 
-/*/SCHERMO
+parameter altezza = 500;
+parameter larghezza = 300;
+
+reg [10:0] posx = (H/2 - larghezza/2);
+reg [10:0] posy = (V/2 - altezza/2);
+
+
+wire [10:0] differenza = H - posx;
+
+cornicetta #(
+.altezza (altezza),
+.larghezza (larghezza)
+) RET(
+.X_POS (posx),
+.Y_POS (posy),
+//Controllo
+.X_CONTROLLO (x),
+.Y_CONTROLLO (y),
+
+.CONFERMA (here1),
+.interno(in1)
+
+);
+
+
+
+cornicetta #(
+.altezza (altezza),
+.larghezza (larghezza)
+) RET2(
+.X_POS (posx + H),
+.Y_POS (posy + V),
+//Controllo
+.X_CONTROLLO (x),
+.Y_CONTROLLO (y),
+
+.CONFERMA (here2),
+.interno(in2)
+
+);
+
+
+//SCHERMO
 always@(posedge VGA_CLK)
 begin
- if(disp_en) 
- begin
-	if (x < H)
-	r <= full;
-else
-r <= empty;
+	if(disp_en) 
+	begin
+		if (here)
+		begin
+		r <= full;
+		g <= empty;
+		b <= empty;
+		end
+		else if(in) begin
+		r <= empty;
+		g <= full;
+		b <= empty;
+		end else
+		begin
+		r <= empty;
+		g <= empty;
+		b <= full;
+		end
+	end
 end
-end
-*/
 
+
+always@(posedge VGA_VS or negedge reset)
+begin
+	if (!reset)
+	begin
+	posx = (H/2 - larghezza/2);
+	posy = (V/2 - altezza/2);
+	end
+	else
+	begin
+		if (!KEY[1])
+		begin
+			if (SW[0])
+			begin
+				if (posx == H)
+				posx <= 10'd0;
+				else
+				posx <= posx + 10'd1;
+			end
+			else
+			begin
+				if (posx == (10'd0))
+				posx <= H ;
+				else
+				posx <= posx - 10'd1;
+			end
+		end
+		else
+			posx <= posx;
+	
+		if (!KEY[2])
+		begin
+			if (SW[1])
+			begin
+				if (posy == V)
+				posy <= 10'd0;
+				else
+				posy <= posy + 10'd1;
+			end
+			else
+			begin
+				if (posy == (10'd0))
+				posy <= V ;
+				else
+				posy <= posy - 10'd1;
+			end
+		end
+		else
+		posy <= posy;
+
+	end
+end
+/*
  //QUADRATI
 always@(posedge VGA_CLK or negedge reset)begin
 	if(!reset)begin
@@ -242,28 +353,7 @@ always@(posedge VGA_CLK or negedge reset)begin
 		b <= empty;
 		g <= empty;
 	end else if(disp_en) begin
-	/*
-			if (x<(H/2)&&y<(V/2))begin
-			r <= 1;
-			b <= 0;
-			g <= 0;
-		end
-		else if (x>(H/2)&&y<(V/2))begin
-			r <= 0;
-			b <= 1;
-			g <= 0;
-		end
-		else if (x<(H/2)&&y>(V/2))begin
-			r <= 0;
-			b <= 0;
-			g <= 1;
-		end
-		else if (x>(H/2)&&y>(V/2))begin
-			r <= 0;
-			b <= 0;
-			g <= 0;
-		end
-		*/
+	
 		if (x < (H/2-4) && y < (V/2-4))begin
 			r <= full;
 			b <= empty;
@@ -291,5 +381,6 @@ always@(posedge VGA_CLK or negedge reset)begin
 		end
 	end
 end
+*/
 
 endmodule
