@@ -15,7 +15,7 @@ parameter H = 1280;
 
 wire [10:0] differenza = H - X_POS;
  
-assign CONFERMA = ((X_CONTROLLO > X_POS - (differenza < larghezza)?H:0) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < (X_POS + larghezza) && (Y_CONTROLLO < (Y_POS + altezza))));
+assign CONFERMA = ((X_CONTROLLO > X_POS - (differenza < larghezza)?H:0) && (Y_CONTROLLO > Y_POS))&&((X_CONTROLLO < (X_POS + larghezza + (differenza < larghezza)?(H+differenza):0) && (Y_CONTROLLO < (Y_POS + altezza))));
 endmodule //rettangolo
 
 module cornicetta(
