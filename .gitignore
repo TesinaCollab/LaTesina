@@ -8,6 +8,8 @@
 \simulation
 *.done
 *.wlf
+*.smsg
+*.sof
 \work
 
 
