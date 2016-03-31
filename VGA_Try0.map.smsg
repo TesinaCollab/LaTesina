@@ -1,2 +1,2 @@
 Info (10281): Verilog HDL Declaration information at stm_timing.v(13): object "Sync" differs only in case from object "sync" in the same scope
-Warning (10268): Verilog HDL information at VGA_Try0.v(297): always construct contains both blocking and non-blocking assignments
+Warning (10268): Verilog HDL information at VGA_Try0.v(280): always construct contains both blocking and non-blocking assignments

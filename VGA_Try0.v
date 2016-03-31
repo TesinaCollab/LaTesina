@@ -222,13 +222,12 @@ end
 end
 */
 //RETTANGOLO
-wire here,here1,here2;
-assign here = here1 || here2;
-wire in,in1,in2;
-assign in = in1 || in2;
+wire here;
+wire in;
 
-parameter altezza = 500;
-parameter larghezza = 300;
+parameter altezza = 300;
+parameter larghezza = 400;
+parameter spessore = 20;
 
 reg [10:0] posx = (H/2 - larghezza/2);
 reg [10:0] posy = (V/2 - altezza/2);
@@ -238,7 +237,8 @@ wire [10:0] differenza = H - posx;
 
 cornicetta #(
 .altezza (altezza),
-.larghezza (larghezza)
+.larghezza (larghezza),
+.spessore(spessore)
 ) RET(
 .X_POS (posx),
 .Y_POS (posy),
@@ -246,25 +246,8 @@ cornicetta #(
 .X_CONTROLLO (x),
 .Y_CONTROLLO (y),
 
-.CONFERMA (here1),
-.interno(in1)
-
-);
-
-
-
-cornicetta #(
-.altezza (altezza),
-.larghezza (larghezza)
-) RET2(
-.X_POS (posx + H),
-.Y_POS (posy + V),
-//Controllo
-.X_CONTROLLO (x),
-.Y_CONTROLLO (y),
-
-.CONFERMA (here2),
-.interno(in2)
+.CONFERMA (here),
+.interno(in)
 
 );
 
