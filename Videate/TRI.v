@@ -17,9 +17,9 @@ parameter empty = 8'b0;
 
 wire wR,wG,wB;
 
-triangolo#(150) R(400,500,x,y,wR);
-triangolo#(150) G(400,500,x,y,wG);
-triangolo#(150) B(400,500,x,y,wB);
+triangolo#(300) R(400,500,x,y,wR);
+triangolo#(300) G(400,600,x,y,wG);
+triangolo#(300) B(500,600,x,y,wB);
 
 initial
 begin
@@ -32,16 +32,21 @@ end
 always@(posedge VGA_CLK)
 begin
 	if(disp_en) begin
-			if (wR)begin
+			if (wR)
 			r <= full;
-			b <= empty;
-			g <= empty;
-			end
-		else begin
+			else
 			r <= empty;
-			b <= empty;
+			
+			if (wG)
+			g <= full;
+			else
 			g <= empty;
-		end
+			
+			if (wB)
+			b <= full;
+			else
+			b <= empty;
+			
 	end
 end
 endmodule
