@@ -57,69 +57,21 @@ wire reset;
 wire vEnable;
 wire hEnable;
 
-reg [7:0] r,g,b;
+wire [7:0] r1,g1,b1;
+wire [7:0] r2,g2,b2;
+wire [7:0] r3,g3,b3;
+wire [7:0] r4,g4,b4;
+wire [7:0] r,g,b;
 
 parameter H = 1280;
 parameter V = 1024;
+//colori
 parameter full = 8'hff;
 parameter empty = 8'b0;
 
-timing tm(
-.clk (VGA_CLK)		,
-.rst_n	(reset)	,
-//direttamente alla porta
-.hsync	(VGA_HS),
-.vsync	(VGA_VS),
-//al ADV7123
-//.blank_n	(VGA_BLANK_N),
-.sync_n	(VGA_SYNC_N),
-//al mux per i pixels
-//.disp_enable  (disp_en),
-.Xpix (x),
-.Ypix (y),
-.vEnable (vEnable),
-.hEnable (hEnable)
-);
-
-assign disp_en = vEnable && hEnable ;
 reg [7:0] colore;
 
 //Per il 7 segmenti
-wire [3:0] d3,d2,d1,d0;
-wire [6:0] unused;
-//wire [7:0] muxcolor;
-
-//assign muxcolor = ((SW[1:0] == 2'b00)?colore:((SW[1:0] == 2'b01)?r:((SW[1:0] == 2'b10)?g:b)));
-
-bcdtoHex zero(
-.inBCD (4'd0),
-.outHEX (unused)
-);
-
-bcdtoHex cifra1(
-.inBCD (d1),
-.outHEX (HEX1)
-);
-
-bcdtoHex cifra2(
-.inBCD (d2),
-.outHEX (HEX2)
-);
-
-
-bcdtoHex cifra3(
-.inBCD (d0),
-.outHEX (HEX0)
-);
-
-bcdtoHex cifra4(
-.inBCD (d3),
-.outHEX (HEX3)
-);
-
-assign HEX5 = unused;
-assign HEX4 = unused;
-
 
 /*
 always@(posedge VGA_VS or negedge reset)
@@ -146,192 +98,80 @@ end
 //=======================================================
 //  Structural coding
 //=======================================================
+assign GPIO1GPIO[5:0]={VGA_CLK,disp_en,VGA_HS,VGA_VS,vEnable,hEnable};//debug infos
+
 assign reset = KEY[0];
-//assign VGA_CLK = CLOCK4_50;
 assign VGA_BLANK_N = 1'b1;
 
 assign LEDR[1] = VGA_BLANK_N ;
+//mux prinipali per spegnere i dac quando la riga non deve essere visualizzata
 assign VGA_R = (disp_en)?r:empty;
 assign VGA_G = (disp_en)?g:empty;
 assign VGA_B = (disp_en)?b:empty;
 
-assign GPIO1GPIO[5:0]={VGA_CLK,disp_en,VGA_HS,VGA_VS,vEnable,hEnable};
-
-
-PLL pll(	
-
-.refclk (CLOCK_50),
-
-	// interface 'reset'
+PLL pll(	//modulo creato con una megafunzione(vedi ipcatalog dal menu view->Utility Windows)
+.refclk (CLOCK_50),//clock di partenza, deve essere 50 MHz per come abbiamo impostato le cose
 .rst (~reset),
-
-	// interface 'outclk0'
-.outclk_0 (VGA_CLK),
-
-	// interface 'locked'
-.locked (LEDR[9])
+.outclk_0 (VGA_CLK),//uscita del clock a 108MHz
+.locked (LEDR[9])// se il led e` acceso il PLL funziona
 	);
 
-initial
-begin
-r <= empty;
-b <= empty;
-g <= empty;
-end
 
-
-/*
-//CORNICE
-always@(posedge VGA_CLK)
-begin
- if(disp_en) begin
-		if (x < 21)begin
-			r <= full;
-			b <= full;
-			g <= full;
-		end
-		else if (y < 21)begin
-			r <= empty;
-			b <= full;
-			g <= full;
-		end
-		else if (x > H-21)begin
-			r <= full;
-			b <= full;
-			g <= empty;
-		end
-		else if (y > V-21)begin
-			r <= full;
-			b <= empty;
-			g <= full;
-		end
-		else begin
-			r <= empty;
-			b <= (full - y[10:2]);
-			g <= empty;
-		end
-	end
-	else begin
-r <= empty;
-b <= empty;
-g <= empty;
-end
-end
-*/
-//RETTANGOLO
-wire here;
-wire in;
-
-parameter altezza = 300;
-parameter larghezza = 400;
-parameter spessore = 20;
-
-reg [10:0] posx = (H/2);
-reg [10:0] posy = (V/2);
-
-BIN20to6BCD segmenti(
-.binary ({10'd0,posx}),
-.D3 (d3),
-.D2 (d2),
-.D1 (d1),
-.D0 (d0)
+timing tm(//spiegazioni in timing.v
+.clk (VGA_CLK)		,
+.rst_n	(reset)	,
+//direttamente alla porta
+.hsync	(VGA_HS),
+.vsync	(VGA_VS),
+//al ADV7123
+//.blank_n	(VGA_BLANK_N),
+.sync_n	(VGA_SYNC_N),
+//al mux per i pixels
+//.disp_enable  (disp_en),//&& interno non funziona e quindi lo facciamo fuori
+.Xpix (x),
+.Ypix (y),
+.vEnable (vEnable),
+.hEnable (hEnable)
 );
 
-wire [10:0] differenza = H - posx;
-
-cornicetta #(
-.altezza (altezza),
-.larghezza (larghezza),
-.spessore(spessore)
-) RET(
-.X_POS (posx),
-.Y_POS (posy),
-//Controllo
-.X_CONTROLLO (x),
-.Y_CONTROLLO (y),
-
-.CONFERMA (here),
-.interno(in)
-
-);
-
-
-//SCHERMO
-always@(posedge VGA_CLK)
-begin
-	if(disp_en) 
-	begin
-		if (here)
-		begin
-		r <= full;
-		g <= empty;
-		b <= empty;
-		end
-		else if(in) begin
-		r <= empty;
-		g <= full;
-		b <= empty;
-		end else
-		begin
-		r <= empty;
-		g <= empty;
-		b <= full;
-		end
-	end
-end
-
-
-always@(posedge VGA_VS or negedge reset)
-begin
-	if (!reset)
-	begin
-	posx = (H/2 - larghezza/2);
-	posy = (V/2 - altezza/2);
-	end
-	else
-	begin
-		if (!KEY[1])
-		begin
-			if (SW[0])
-			begin
-				if (posx == H)
-				posx <= 10'd0;
-				else
-				posx <= posx + 10'd1;
-			end
-			else
-			begin
-				if (posx == (10'd0))
-				posx <= H ;
-				else
-				posx <= posx - 10'd1;
-			end
-		end
-		else
-			posx <= posx;
+assign disp_en = vEnable && hEnable ;
 	
-		if (!KEY[2])
-		begin
-			if (SW[1])
-			begin
-				if (posy == V)
-				posy <= 10'd0;
-				else
-				posy <= posy + 10'd1;
-			end
-			else
-			begin
-				if (posy == (10'd0))
-				posy <= V ;
-				else
-				posy <= posy - 10'd1;
-			end
-		end
-		else
-		posy <= posy;
+attorno#(H,V)  cornice(
+ VGA_CLK,
+ disp_en,
+//coordinate
+x,
+y,
+//colori
+r2,
+g2,
+b2
+);
+	assign r = (SW[8])?r2:r4;
+	assign g = (SW[8])?g2:g4;
+	assign b = (SW[8])?b2:b4;
 
-	end
-end
+	movimenti#(H,V) muv(
+ VGA_CLK,
+ VGA_VS,
+ disp_en,
+KEY,
+SW,
+//coordinate
+x,
+y,
+//colori
+r4,
+g4,
+b4,
+	HEX0,
+	HEX1,
+	HEX2,
+	HEX3,
+	HEX4,
+	HEX5
+);
+
 /*
  //QUADRATI
 always@(posedge VGA_CLK or negedge reset)begin

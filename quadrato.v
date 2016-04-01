@@ -59,14 +59,18 @@ assign interno = in;
 parameter altezza = 100;
 parameter larghezza = 100;
 parameter spessore = 6;
+parameter H = 1280;
+parameter V = 1024;
 
 parameter spessore2 = spessore / 2;
-
+wire [10:0] Xint = ((X_POS + spessore2)>H)?(X_POS + spessore2-H):(X_POS + spessore2);
+wire [10:0] Yint = ((Y_POS + spessore2)>H)?(Y_POS + spessore2-V):(Y_POS + spessore2);
 parameter altint = altezza - spessore;
 parameter largint = larghezza - spessore;
 
-rettangolo#(altezza,larghezza) attorno(X_POS,Y_POS,X_CONTROLLO,Y_CONTROLLO,out);
-rettangolo#(altint,largint) dentro(X_POS + spessore2,Y_POS + spessore2,X_CONTROLLO,Y_CONTROLLO,in);
+
+rettangolo#(altezza,larghezza,H,V) attorno(X_POS,Y_POS,X_CONTROLLO,Y_CONTROLLO,out);
+rettangolo#(altint,largint,H,V) dentro(Xint,Yint,X_CONTROLLO,Y_CONTROLLO,in);
 
 assign CONFERMA = (out)? out && !in :0 ;
 
