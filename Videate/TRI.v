@@ -15,11 +15,14 @@ parameter V = 1024;
 parameter full = 8'hff;
 parameter empty = 8'b0;
 
+parameter myX =440;
+parameter myY =312;
+
 wire wR,wG,wB;
 
-triangolo#(300) R(400,500,x,y,wR);
-triangolo#(300) G(400,600,x,y,wG);
-triangolo#(300) B(500,600,x,y,wB);
+triangolo#(300) R(myX,myY,x,y,wR);
+triangolo#(300) G(myX,myY-100,x,y,wG);
+triangolo#(300) B(myX+100,myY,x,y,wB);
 
 initial
 begin

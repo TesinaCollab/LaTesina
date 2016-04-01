@@ -4,6 +4,7 @@ input VGA_VS,
 input disp_en,
 input [3:0]KEY,
 input [9:0]SW,
+input enable,
 //coordinate
 input [10:0]x,
 input [10:0]y,
@@ -40,7 +41,7 @@ wire in;//l'interno
 wire [3:0] d3,d2,d1,d0;
 wire [6:0] unused;
 BIN20to6BCD segmenti(
-.binary ({10'd0,((SW[9])?posx:posy)}),
+.binary ({10'd0,((enable)?(SW[9])?posx:posy):10'd0}),
 .D3 (d3),
 .D2 (d2),
 .D1 (d1),

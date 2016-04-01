@@ -69,7 +69,7 @@ parameter V = 1024;
 parameter full = 8'hff;
 parameter empty = 8'b0;
 
-reg [7:0] colore;
+reg [1:0] states;
 
 //Per il 7 segmenti
 
@@ -136,7 +136,19 @@ timing tm(//spiegazioni in timing.v
 
 assign disp_en = vEnable && hEnable ;
 
-colori#(H,V)  uno(
+colori#(H,V)  i_triangoli(
+ VGA_CLK,
+ disp_en,
+//coordinate
+x,
+y,
+//colori
+r2,
+g2,
+b2
+);
+
+megapixel#(H,V)  uno(
  VGA_CLK,
  disp_en,
 //coordinate
@@ -155,14 +167,14 @@ attorno#(H,V)  cornice(
 x,
 y,
 //colori
-r2,
-g2,
-b2
+r3,
+g3,
+b3
 );
-//tmp
-	assign r = (SW[8])?r1:r4;
-	assign g = (SW[8])?g1:g4;
-	assign b = (SW[8])?b1:b4;
+
+	assign r = (states==2'b00)?r1:((states==2'b01)?r2:((states==2'b10)?r3:(r4)));
+	assign g = (states==2'b00)?g1:((states==2'b01)?g2:((states==2'b10)?g3:(g4)));
+	assign b = (states==2'b00)?b1:((states==2'b01)?b2:((states==2'b10)?b3:(b4)));
 
 	movimenti#(H,V) muv(
  VGA_CLK,
@@ -170,6 +182,7 @@ b2
  disp_en,
 KEY,
 SW,
+states==2'b11,
 //coordinate
 x,
 y,
@@ -184,43 +197,10 @@ b4,
 	HEX4,
 	HEX5
 );
+initial
+states = 2'b0;
 
-/*
- //QUADRATI
-always@(posedge VGA_CLK or negedge reset)begin
-	if(!reset)begin
-		r <= empty;
-		b <= empty;
-		g <= empty;
-	end else if(disp_en) begin
-	
-		if (x < (H/2-4) && y < (V/2-4))begin
-			r <= full;
-			b <= empty;
-			g <= empty;
-		end
-		else if (x > (H/2+4) && y < (V/2-4))begin
-			r <= empty;
-			b <= full;
-			g <= empty;
-		end
-		else if (x<(H/2-4) && y>(V/2+4))begin
-			r <= empty;
-			b <= empty;
-			g <= full;
-		end
-		else if (x>(H/2+4) && y>(V/2+4))begin
-			r <= full;
-			b <= empty;
-			g <= full;
-		end
-		else begin
-			r <= full;
-			b <= full;
-			g <= full;
-		end
-	end
-end
-*/
+always@(negedge KEY[3])
+states=states+2'b1;
 
 endmodule

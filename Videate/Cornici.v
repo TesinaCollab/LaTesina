@@ -59,3 +59,42 @@ g <= empty;
 end
 end
 endmodule
+
+
+/*
+ //QUADRATI
+always@(posedge VGA_CLK or negedge reset)begin
+	if(!reset)begin
+		r <= empty;
+		b <= empty;
+		g <= empty;
+	end else if(disp_en) begin
+	
+		if (x < (H/2-4) && y < (V/2-4))begin
+			r <= full;
+			b <= empty;
+			g <= empty;
+		end
+		else if (x > (H/2+4) && y < (V/2-4))begin
+			r <= empty;
+			b <= full;
+			g <= empty;
+		end
+		else if (x<(H/2-4) && y>(V/2+4))begin
+			r <= empty;
+			b <= empty;
+			g <= full;
+		end
+		else if (x>(H/2+4) && y>(V/2+4))begin
+			r <= full;
+			b <= empty;
+			g <= full;
+		end
+		else begin
+			r <= full;
+			b <= full;
+			g <= full;
+		end
+	end
+end
+*/
