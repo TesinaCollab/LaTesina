@@ -64,7 +64,7 @@ parameter V = 1024;
 
 parameter spessore2 = spessore / 2;
 wire [10:0] Xint = ((X_POS + spessore2)>H)?(X_POS + spessore2-H):(X_POS + spessore2);
-wire [10:0] Yint = ((Y_POS + spessore2)>H)?(Y_POS + spessore2-V):(Y_POS + spessore2);
+wire [10:0] Yint = ((Y_POS + spessore2)>V)?(Y_POS + spessore2-V):(Y_POS + spessore2);
 parameter altint = altezza - spessore;
 parameter largint = larghezza - spessore;
 

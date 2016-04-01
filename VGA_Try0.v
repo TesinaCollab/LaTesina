@@ -135,6 +135,18 @@ timing tm(//spiegazioni in timing.v
 );
 
 assign disp_en = vEnable && hEnable ;
+
+colori#(H,V)  uno(
+ VGA_CLK,
+ disp_en,
+//coordinate
+x,
+y,
+//colori
+r1,
+g1,
+b1
+);
 	
 attorno#(H,V)  cornice(
  VGA_CLK,
@@ -147,9 +159,10 @@ r2,
 g2,
 b2
 );
-	assign r = (SW[8])?r2:r4;
-	assign g = (SW[8])?g2:g4;
-	assign b = (SW[8])?b2:b4;
+//tmp
+	assign r = (SW[8])?r1:r4;
+	assign g = (SW[8])?g1:g4;
+	assign b = (SW[8])?b1:b4;
 
 	movimenti#(H,V) muv(
  VGA_CLK,
