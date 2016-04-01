@@ -83,20 +83,13 @@ timing tm(
 
 assign disp_en = vEnable && hEnable ;
 reg [7:0] colore;
-/*
+
 //Per il 7 segmenti
-wire [3:0] d2,d1,d0;
+wire [3:0] d3,d2,d1,d0;
 wire [6:0] unused;
-wire [7:0] muxcolor;
+//wire [7:0] muxcolor;
 
-assign muxcolor = ((SW[1:0] == 2'b00)?colore:((SW[1:0] == 2'b01)?r:((SW[1:0] == 2'b10)?g:b)));
-
-BIN20to6BCD segmenti(
-.binary ({12'd0,muxcolor}),
-.D2 (d2),
-.D1 (d1),
-.D0 (d0)
-);
+//assign muxcolor = ((SW[1:0] == 2'b00)?colore:((SW[1:0] == 2'b01)?r:((SW[1:0] == 2'b10)?g:b)));
 
 bcdtoHex zero(
 .inBCD (4'd0),
@@ -119,10 +112,14 @@ bcdtoHex cifra3(
 .outHEX (HEX0)
 );
 
+bcdtoHex cifra4(
+.inBCD (d3),
+.outHEX (HEX3)
+);
+
 assign HEX5 = unused;
 assign HEX4 = unused;
-assign HEX3 = unused;
-*/
+
 
 /*
 always@(posedge VGA_VS or negedge reset)
@@ -229,9 +226,16 @@ parameter altezza = 300;
 parameter larghezza = 400;
 parameter spessore = 20;
 
-reg [10:0] posx = (402);
+reg [10:0] posx = (H/2);
 reg [10:0] posy = (V/2);
 
+BIN20to6BCD segmenti(
+.binary ({10'd0,posx}),
+.D3 (d3),
+.D2 (d2),
+.D1 (d1),
+.D0 (d0)
+);
 
 wire [10:0] differenza = H - posx;
 
