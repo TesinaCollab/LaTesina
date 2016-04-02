@@ -1,8 +1,9 @@
-/* questo modulo unisce i due controlli verticale e orizzontale,
+/*****************************************************************
+ * Questo modulo unisce i due controlli verticale e orizzontale,
  * fornisce i segnali di sincronia da inviare allo schermo,
  * genera un segnale che indica quando mandare i dati all'ADV7123
  * e fornisce le coordinate del pixel da disegnare
- */
+ *****************************************************************/
 module timing(
 	      input 		clk,
 	      input 		rst_n,
@@ -69,8 +70,7 @@ module timing(
    // ISTRUZIONI
    //==========================
    // i pixel devono lavorare quando non siamo nel blank time
-   //a quanto pare questo non funziona, meglio fare l'operazione di &&
-   //nel modulo in cui serve
+   //NB:a quanto pare questo non funziona, meglio fare l'operazione di && nel modulo in cui serve
    assign disp_enable = vEnable && hEnable;
    assign blank_n	= 1'b1;//disp_enable;//blank negato
    assign sync_n	= 1'b0;//disattiva i segnali di sincronia sul verde
