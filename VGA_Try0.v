@@ -131,7 +131,7 @@ module VGA_Try0(
    //questi moduli servono ad alternare le schermate
    //abbiamo preferito creare moduli per non aggiungere
    //troppe righe di codice al modulo principale e renderlo piu` leggibile
-   megapixel#(H,V)  uno(
+   megapixel#(H,V,(H-20)/3,20/4)  uno(
 			.VGA_CLK(VGA_CLK),
 			.disp_en(disp_en),
 			.x(x),
