@@ -8,6 +8,16 @@
 \simulation
 *.done
 *.wlf
+*.smsg
+*.sof
+*.qws
+*.pin
+*.jdi
+*.qpf
+*.qsf
+*.sld
+*.cdf
+
 \work
 
 
@@ -172,3 +182,7 @@ pythontex-files-*/
 
 # Latexian
 TSWLatexianTemp*
+VGA_Try0.map.smsg
+*.sof
+VGA_Try0.map.smsg
+VGA_Try0.sof
