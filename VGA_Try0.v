@@ -37,7 +37,7 @@ module VGA_Try0(
 		inout [35:0] GPIO1GPIO
 		);
    //=======================================================
-   //  REG/wIRE declarations
+   //  REG/WIRE declarations
    //=======================================================
    wire 		     reset;
    //relativi alla VGA
@@ -86,9 +86,14 @@ module VGA_Try0(
    assign LEDR[1] = VGA_BLANK_N ;
    
    //mux prinipali per spegnere i dac quando la riga non deve essere visualizzata
+   assign disp_en = vEnable && hEnable;
    assign VGA_R = (disp_en)?r:empty;
    assign VGA_G = (disp_en)?g:empty;
    assign VGA_B = (disp_en)?b:empty;
+   //mux per la selezione dello schermo
+   assign r = (states==2'b00)?r1:((states==2'b01)?r2:((states==2'b10)?r3:(r4)));
+   assign g = (states==2'b00)?g1:((states==2'b01)?g2:((states==2'b10)?g3:(g4)));
+   assign b = (states==2'b00)?b1:((states==2'b01)?b2:((states==2'b10)?b3:(b4)));
    
    //modulo creato con una megafunzione
    // (vedi ipcatalog dal menu view->Utility Windows)
@@ -123,74 +128,67 @@ module VGA_Try0(
       .vEnable (vEnable),
       .hEnable (hEnable)
       );
-   
-   assign disp_en = vEnable && hEnable ;
-
-   colori#(H,V)  i_triangoli(
-			     VGA_CLK,
-			     disp_en,
-			     //coordinate
-			     x,
-			     y,
-			     //colori
-			     r2,
-			     g2,
-			     b2
-			     );
-
+   //questi moduli servono ad alternare le schermate
+   //abbiamo preferito creare moduli per non aggiungere
+   //troppe righe di codice al modulo principale e renderlo piu` leggibile
    megapixel#(H,V)  uno(
-			VGA_CLK,
-			disp_en,
-			//coordinate
-			x,
-			y,
-			//colori
-			r1,
-			g1,
-			b1
+			.VGA_CLK(VGA_CLK),
+			.disp_en(disp_en),
+			.x(x),
+			.y(x),
+			.r(r1),
+			.g(g1),
+			.b(b1)
 			);
+   colori#(H,V)  i_triangoli(
+			     .VGA_CLK(VGA_CLK),
+			     .disp_en(disp_en),
+			     .x(x),
+			     .y(x),
+			     .r(r2),
+			     .g(g2),
+			     .b(b2)
+			     );
    
    attorno#(H,V)  cornice(
-			  VGA_CLK,
-			  disp_en,
-			  //coordinate
-			  x,
-			  y,
-			  //colori
-			  r3,
-			  g3,
-			  b3
+			  .VGA_CLK(VGA_CLK),
+			  .disp_en(disp_en),
+			  .x(x),
+			  .y(x),
+			  .r(r3),
+			  .g(g3),
+			  .b(b3)
 			  );
 
-   assign r = (states==2'b00)?r1:((states==2'b01)?r2:((states==2'b10)?r3:(r4)));
-   assign g = (states==2'b00)?g1:((states==2'b01)?g2:((states==2'b10)?g3:(g4)));
-   assign b = (states==2'b00)?b1:((states==2'b01)?b2:((states==2'b10)?b3:(b4)));
-
    movimenti#(H,V) muv(
-		       VGA_CLK,
-		       VGA_VS,
-		       disp_en,
-		       KEY,
-		       SW,
-		       states==2'b11,
-		       //coordinate
-		       x,
-		       y,
-		       //colori
-		       r4,
-		       g4,
-		       b4,
-		       HEX0,
-		       HEX1,
-		       HEX2,
-		       HEX3,
-		       HEX4,
-		       HEX5
+		       .VGA_CLK(VGA_CLK),
+		       .disp_en(disp_en),
+		       .x(x),
+		       .y(x),
+		       .r(r4),
+		       .g(g4),
+		       .b(b4)
+		       .KEY(KEY),
+		       .SW(SW),
+		       //attiva lo schermo solo se e` nello stato giusto
+		       .enable(states==2'b11),
+		       .HEX0(HEX0),
+		       .HEX1(HEX1),
+		       .HEX2(HEX2),
+		       .HEX3(HEX3),
+		       .HEX4(HEX4),
+		       .HEX5(HEX5)
 		       );
+   //selezione dello schermo:
    initial
-     states = 2'b0;
+     begin
+	states = 2'b0;
+     end
 
    always@(negedge KEY[3])
-     states=states+2'b1;
-
+     begin
+	states=states+2'b1;
+	//volutamente il reset non riporta il counter al primo schermo
+     end
+   
 endmodule
